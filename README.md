@@ -1,6 +1,6 @@
 # Papers in Theory of Deep Learning
 
-This repository contains a list of papers in various subfields of theory of deep learning. Each subfield is organized accordingly in each folder, along with separate README files in which the papers are chronologically ordered. Each paper is assigned to a subfolder containing the paper(.pdf) and notes(.tex, .ppt).
+This repository contains a list of papers in various subfields of theory of deep learning. Each subfield is organized accordingly in each folder, along with separate README files in which the papers are chronologically ordered. Each paper is assigned to a subfolder containing the (possibly annotated) paper(.pdf) and notes(.tex, .ppt).
 
 Some of the papers will be presented in the paper reading group during the Summer 2021 at KAIST [OSI Lab](http://osi.kaist.ac.kr/)
 

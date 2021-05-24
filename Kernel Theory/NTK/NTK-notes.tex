@@ -1,0 +1,250 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[russian, english]{babel}
+
+\usepackage{kotex, amsmath, amssymb, amsthm, mathtools, enumitem, systeme, bbm, physics}
+  % use Ko-tex, math equation, symbol, theorem, enumerate
+\usepackage[onehalfspacing]{setspace} % line spacing
+\usepackage[all]{xy} % draw diagram
+\usepackage{adjustbox}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{indentfirst}
+\usepackage{collectbox}
+\usepackage[margin=1in]{geometry}
+\usepackage{tikz-cd}
+\usepackage[ruled,vlined]{algorithm2e}
+
+\renewcommand{\qedsymbol}{$\blacksquare$} % Q.E.D. symbol
+\newcommand{\mybox}{%
+    \collectbox{%
+        \setlength{\fboxsep}{1pt}%
+        \fbox{\BOXCONTENT}%
+    }%
+}
+
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{problem}{Problem}
+
+\newtheorem*{claim}{Claim}
+
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+\newtheorem*{note}{Note}
+\newtheorem*{exer}{Exercise}
+\newtheorem* {prob}{Problem}
+
+
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\DeclareMathOperator*{\argmax}{\arg\!\max}
+\DeclareMathOperator*{\argmin}{\arg\!\min}
+
+\newcommand{\sgn}{\mathrm{sgn}}
+
+
+\begin{document}
+
+\title{%
+  \huge Notes on "Neural Tangent Kernel: Convergence and Generalization in Neural Networks" by Jacot et al., 2018
+  }
+\author{Junghyun Lee (Dept. of Mathematical Sciences, School of Computing)}
+\date{\today}
+\maketitle
+
+In this note, I will cover the first paper\cite{NTK} that introduced the neural tangent kernel (NTK).
+In my opinion, the paper is written in a very mathematically (and physically\footnote{as in physics}) intricate manner, but with not so much intuition.
+Many blogs and articles \cite{NTK-Rajat, NTK-CMU, NTK-Huszar, NTK-oxford} provide excellent expositions to the intuition behind NTKs, but not much materials are available for understanding the paper as it is with all the mathematical subtleties\footnote{The closest resource was \cite{NTK-Jinwoo}}.
+
+This note is meant to serve as a ``complete" companion to reading \cite{NTK}; assuming only elementary undergrad mathematics (little bit of analysis, some linear algebra...etc.), this note will supplement the paper with missing calculation steps, missing definitions from advanced mathematics...etc.
+(Some of the elementary proofs will be left as exercises, although the solutions will be provided at the Appendix)
+Also, borrowing from the mentioned blogs and articles, I will give the intuition behind NTK and some of its implications in the connection between kernel theory and deep learning.
+
+
+
+\section{Basic Setup (ANN)}
+Here, we only consider fully-connected networks of depth $L$, as shown in Figure ?.
+
+
+\section{Deep Learning as Optimization over Function Space}
+\subsection{Essential Functional Analysis}
+For each given parameter vector $\theta \in \mathbb{R}^P$, the corresponding neural network $f_\theta$ can be regarded as an element of the function space $\mathcal{F} = \{f : \mathbb{R}^{n_0} \rightarrow \mathbb{R}^{n_L}\}$, which is basically the collection of all possible functions from $\mathbb{R}^{n_0}$ to $\mathbb{R}^{n_L}$.
+
+In order to endow $\mathcal{F}$ with a certain topological structure, let us recall few definitions from linear algebra \cite{HoffKun} and (real) functional analysis \cite{Rudin}:
+
+\begin{definition}
+	$L_p$ space
+\end{definition}
+\begin{definition}
+	Hilbert space
+\end{definition}
+\begin{definition}
+	Banach space
+\end{definition}
+
+\begin{definition}
+	Let $X$ be a real vector space.
+	Then a function $\langle \cdot, \cdot \rangle : X \times X \rightarrow \mathbb{R}$ is a {\bf bilinear form (on $X$)} if it is linear in both arguments i.e. for all $x, y, z \in X$ and $c \in \mathbb{R}$,
+	\begin{equation*}
+		\langle cx + y, z \rangle = c \langle x, z \rangle + \langle y, z \rangle
+	\end{equation*}
+	and
+	\begin{equation*}
+		\langle z, cx + y \rangle = c \langle z, x \rangle + \langle z, y \rangle
+	\end{equation*}
+\end{definition}
+
+\begin{definition}
+	A bilinear form $\langle \cdot, \cdot \rangle : X \times X \rightarrow \mathbb{R}$ is a {\bf semi-inner product (on $X$)} if it is symmetric and positive semi-definite i.e. for all $x, y \in X$, $\langle x, y \rangle = \langle y, x \rangle$ and $\langle x, x \rangle \geq 0$.
+\end{definition}
+
+\begin{theorem}[Cauchy-Schwarz Inequality]
+	Let $\langle \cdot, \cdot \rangle$ be a semi-inner product on $X$.
+	Then for any $x, y \in X$,
+	\begin{equation*}
+		\langle x, y \rangle^2 \leq \langle x, x \rangle \langle y, y \rangle
+	\end{equation*}
+\end{theorem}
+\begin{proof}
+	Exercise to the reader!
+\end{proof}
+
+\begin{definition}
+	A function $p: X \rightarrow \mathbb{R}$ is a {\bf seminorm (on $X$)} if the following properties hold:
+	\begin{enumerate}
+		\item Triangle inequality (Subadditivity):
+		\[ p(x + y) \leq p(x) + p(y) \quad \forall x, y \in X \]
+		
+		\item Absolute homogeneity:
+		\[ p(sx) = |s| p(x) \quad \forall x \in X, s \in \mathbb{F} \]
+	\end{enumerate}
+\end{definition}
+
+\begin{proposition}
+	Given a semi-inner product $\langle \cdot, \cdot \rangle : X \times X \rightarrow \mathbb{R}$, the function $\lVert \cdot \rVert : X \rightarrow \mathbb{R}$ defined as $\lVert x \rVert = \sqrt{\langle x, x \rangle}$ is a seminorm on $X$.
+\end{proposition}
+\begin{proof}
+	Exercise to the reader!
+%	It suffices to check the two properties.
+%	Let $x, y \in X$ and $s \in \mathbb{R}$ be arbitrary.
+%	\begin{enumerate}
+%		\item Triangle inequality
+%		\begin{align*}
+%			\lVert x + y \rVert &= \sqrt{\langle x + y, x + y \rangle} \\
+%			&= \sqrt{\langle x, x \rangle + \langle x, y \rangle + \langle y, x \rangle + \langle y, y \rangle} \\
+%			&= \sqrt{\lVert x \rVert^2 + \lVert y \rVert^2 + 2 \langle x, y \rangle} \\
+%			&= \sqrt{(\lVert x \rVert + \lVert y \rVert)^2 + 2 (\langle x, y \rangle - \lVert x\rVert \lVert y \rVert)}
+%		\end{align*}
+%		
+%		\item Absolute homogeneity:
+%		\begin{equation*}
+%			\lVert sx \rVert = \sqrt{\langle sx, sx \rangle}
+%			= \sqrt{s \langle x, sx \rangle}
+%			= \sqrt{s^2 \langle x, x \rangle}
+%			= |s| \sqrt{\langle x, x \rangle}
+%			= |s| \lVert x \rVert
+%		\end{equation*}
+%	\end{enumerate}
+\end{proof}
+
+\begin{remark}
+	For semi-inner product $\langle \cdot, \cdot \rangle$, $\langle x, x \rangle = 0 \Rightarrow x = 0$ does not hold.
+	For seminorm $p$, $p(x) = 0 \Rightarrow x = 0$ does not hold.
+	With the positive definiteness, we call them inner product and norm, respectively.
+\end{remark}
+
+
+Let $p^{in}$ be a fixed probability measure over the input space $\mathbb{R}^{n_0}$.
+Then we can endow $\mathcal{F}$ with a semi-inner product as follows:
+\begin{proposition}
+	The function $\langle \cdot, \cdot \rangle_{p^{in}} : \mathcal{F} \times \mathcal{F} \rightarrow \mathbb{R}$, defined as below, is a semi-inner product.
+	\begin{equation}
+		\langle f, g \rangle_{p^{in}} = \mathbb{E}_{x \sim p^{in}} \left[ f(x)^\intercal g(x) \right]
+	\end{equation}
+	\begin{proof}
+		Bilinearity follows directly from the linearity of expectation.
+		Symmetry and positive semi-definiteness are trivial.
+	\end{proof}
+\end{proposition}
+
+Observe that this quantifies how {\bf similar} two given functions $f, g \in \mathcal{F}$ are w.r.t. the given input data distribution!
+
+From hereon, we assume that $p^{in}$ is the empirical distribution on the given finite training set $\{x_i\}_{i=1}^N \subset \mathbb{R}^{n_0}$ i.e. $p = \frac{1}{N} \sum_{i=1}^N \delta_{x_i}$ where $\delta_x$ is the Dirac measure on $x \in \mathbb{R}^{n_0}$.
+
+
+\subsection{Overview}
+Before diving into the mathematical details, let us get a grip of the big picture, first.
+We usually think of deep learning as optimizing over $\mathbb{R}^P$ and finding some optimal $\theta^*$ with respect to some loss function $C$ i.e.
+\begin{equation}
+	\theta^* = \argmin_{\theta \in \mathbb{R}^P} C(\theta)
+\end{equation}
+
+where $C(\theta)$ is the loss of the neural network constructed using the parameter vector $\theta$.
+However, the curse of dimensionality and non-convexity of the loss surface deter us from studying the learning dynamics of deep learning.
+Here, we change the viewpoint of optimizing over the parameter space to {\bf optimizing over the function space $\mathcal{F}$}.
+In other words, we consider $C$ to be a cost functional\footnote{Functional is just a terminology used to describe any mapping that maps a function to a real number.} defined {\it on the function space} i.e. $C : \mathcal{F} \rightarrow \mathbb{R}$ and reformulate the optimization as follows:
+\begin{equation}
+	\theta^* = \argmin_{\theta \in \mathbb{R}^P} C(f_\theta) = \argmin_{\theta \in \mathbb{R}^P} C \circ F^{(L)}(\theta)
+\end{equation}
+
+Here, $F^{(L)} : \mathbb{R}^P \rightarrow \mathcal{F}$ is the ANN realization function that maps the parameter vector $\theta$ to the corresponding neural network $f_\theta$.
+In this perspective, we observe that our difficulties mainly arose from the complexity of $F^{(L)}$, and thus, we can {\it exploit the intrinsic structure of $C$ and $\mathcal{F}$ to gain a better understanding of the training dynamics of ANNs}.
+%For instance, we will later exploit the convexity of $C$ (convex in $\mathcal{F}$!) directly.
+
+Such exploitation is done in a kernel trick-fashioned way.
+Intuitively, we consider {\bf neural network as a feature map}, and we construct the corresponding kernel that can be calculated without knowing what the neural network looks like
+With that kernel, we impose a topological structure on $\mathcal{F}$ induced by the kernel (spoiler: semi-inner product space) such that the complex training dynamics of ANN can be described by a simple dynamics on $\mathcal{F}$ w.r.t. that topology.
+
+
+\subsection{Kernel Gradient}
+We start with the basic definition:
+\begin{definition}
+	A function $K : \mathbb{R}^{n_0} \times \mathbb{R}^{n_0} \rightarrow \mathbb{R}^{n_L \times n_L}$ is a {\bf multi-dimensional kernel} if it is a symmetric tensor in $\mathcal{F} \otimes \mathcal{F}$ i.e. $K(x, x') = K(x', x)^\intercal$ for all $x, x' \in \mathbb{R}^{n_0}$.
+\end{definition}
+\begin{remark}
+	The kernel method that we're familiar with (i.e. kernel PCA) deals with the case when $n_L = 1$, which is usually denoted with $k(x, x')$.
+	The connection, however, may be deceiving and sometimes lead to serious confusion.
+	For instance, since $K(x, x')$ is a matrix, one may try to relate it to the Gram matrix.
+	However, Gram matrix is $[k(x_i, x_j)]_{ij}$, while $K(x, x')$ is more like $\phi(x) \phi(x')^\intercal$ where $\phi : \mathbb{R}^{n_0} \rightarrow \mathbb{R}^{n_L}$ is the feature map associated with $K$.
+	Gram matrix for $K$, thus, have to be defined in a different way, as we will see later on.
+\end{remark}
+
+In this subsection, let $K$ be a fixed multi-dimensional kernel.
+We can endow $\mathcal{F}$ with a different semi-inner product, w.r.t. $K$, as follows:
+\begin{proposition}
+	The function $\langle \cdot, \cdot \rangle_K : \mathcal{F} \times \mathcal{F} \rightarrow \mathbb{R}$, defined as below, is a semi-inner product.
+	\begin{equation}
+		\langle f, g \rangle_K = \mathbb{E}_{x, x' \sim p^{in}} \left[ f(x)^\intercal K(x, x') g(x') \right]
+	\end{equation}
+	\begin{proof}
+		Bilinearity follows directly from the linearity of expectation.
+		Symmetry and positive semi-definiteness are trivial.
+	\end{proof}
+\end{proposition}
+
+
+
+\begin{definition}
+	Fr\'{e}chet derivative
+\end{definition}
+
+
+\section{Case Study: Least-squares regression}
+
+
+\newpage
+%\bibliographystyle{alpha}
+\bibliography{NTK-bib}
+
+\end{document}

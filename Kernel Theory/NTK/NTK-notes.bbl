@@ -1,0 +1,34 @@
+\begin{thebibliography}{JGH18}
+
+\bibitem[DH20]{NTK-CMU}
+Simon Du and Wei Hu.
+\newblock {Ultra-Wide Deep Nets and the Neural Tangent Kernel (NTK)}, Jul 2020.
+
+\bibitem[Dwa19]{NTK-Rajat}
+Rajat~Vadiraj Dwaraknath.
+\newblock {Understanding the Neural Tangent Kernel}, Nov 2019.
+
+\bibitem[Hus20]{NTK-Huszar}
+Ferenc Huszár.
+\newblock {Some Intuition on the Neural Tangent Kernel}, Nov 2020.
+
+\bibitem[JGH18]{NTK}
+Arthur Jacot, Franck Gabriel, and Clement Hongler.
+\newblock {Neural Tangent Kernel: Convergence and Generalization in Neural
+  Networks}.
+\newblock In S.~Bengio, H.~Wallach, H.~Larochelle, K.~Grauman, N.~Cesa-Bianchi,
+  and R.~Garnett, editors, {\em Advances in Neural Information Processing
+  Systems}, volume~31. Curran Associates, Inc., 2018.
+
+\bibitem[Lee]{NTK-Jinwoo}
+Jin~Woo Lee.
+\newblock {(Review) Neural Tangent Kernel}.
+
+\bibitem[Pé19]{NTK-oxford}
+Guillermo~Valle Pérez.
+\newblock {Notes on Neural Tangent Kernel: Convergence and Generalization in
+  Neural Networks, by Jacot et al.}
+\newblock Aug 2019.
+\newblock for the Fall2019 NTK reading group in Oxford.
+
+\end{thebibliography}
