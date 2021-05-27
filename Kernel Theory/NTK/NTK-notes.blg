@@ -4,45 +4,45 @@ The top-level auxiliary file: NTK-notes.aux
 The style file: alpha.bst
 Database file #1: NTK-bib.bib
 Warning--empty journal in NTK-oxford
-You've used 6 entries,
+You've used 7 entries,
             2543 wiz_defined-function locations,
-            597 strings with 5310 characters,
-and the built_in function-call counts, 1897 in all, are:
-= -- 166
-> -- 96
-< -- 5
-+ -- 29
-- -- 29
-* -- 116
-:= -- 320
-add.period$ -- 16
-call.type$ -- 6
-change.case$ -- 33
-chr.to.int$ -- 6
-cite$ -- 7
-duplicate$ -- 74
-empty$ -- 153
-format.name$ -- 39
-if$ -- 383
+            604 strings with 5468 characters,
+and the built_in function-call counts, 2343 in all, are:
+= -- 205
+> -- 129
+< -- 6
++ -- 39
+- -- 39
+* -- 150
+:= -- 398
+add.period$ -- 20
+call.type$ -- 7
+change.case$ -- 39
+chr.to.int$ -- 7
+cite$ -- 8
+duplicate$ -- 91
+empty$ -- 185
+format.name$ -- 50
+if$ -- 475
 int.to.chr$ -- 1
 int.to.str$ -- 0
-missing$ -- 2
-newline$ -- 30
-num.names$ -- 20
-pop$ -- 55
+missing$ -- 3
+newline$ -- 35
+num.names$ -- 25
+pop$ -- 62
 preamble$ -- 1
-purify$ -- 39
+purify$ -- 46
 quote$ -- 0
-skip$ -- 73
+skip$ -- 86
 stack$ -- 0
-substring$ -- 42
-swap$ -- 7
-text.length$ -- 5
+substring$ -- 49
+swap$ -- 10
+text.length$ -- 6
 text.prefix$ -- 4
 top$ -- 0
-type$ -- 48
+type$ -- 56
 warning$ -- 1
-while$ -- 15
-width$ -- 8
-write$ -- 68
+while$ -- 19
+width$ -- 9
+write$ -- 82
 (There was 1 warning)

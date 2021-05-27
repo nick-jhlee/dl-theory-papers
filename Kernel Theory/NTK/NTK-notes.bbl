@@ -31,4 +31,11 @@ Guillermo~Valle Pérez.
 \newblock Aug 2019.
 \newblock for the Fall2019 NTK reading group in Oxford.
 
+\bibitem[RR07]{Rahimi-Recht}
+Ali Rahimi and Benjamin Recht.
+\newblock Random features for large-scale kernel machines.
+\newblock In J.~Platt, D.~Koller, Y.~Singer, and S.~Roweis, editors, {\em
+  Advances in Neural Information Processing Systems}, volume~20. Curran
+  Associates, Inc., 2007.
+
 \end{thebibliography}
